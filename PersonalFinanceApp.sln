@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinanceApp.Server", "PersonalFinanceApp.Server\PersonalFinanceApp.Server.csproj", "{9037AE71-3FF7-400F-83CC-D0538CB7C71D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinanceApp.Client", "PersonalFinanceApp.Client\PersonalFinanceApp.Client.csproj", "{7607916B-5FD4-4E56-BB4A-0F40E836C5F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9037AE71-3FF7-400F-83CC-D0538CB7C71D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9037AE71-3FF7-400F-83CC-D0538CB7C71D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9037AE71-3FF7-400F-83CC-D0538CB7C71D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9037AE71-3FF7-400F-83CC-D0538CB7C71D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7607916B-5FD4-4E56-BB4A-0F40E836C5F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7607916B-5FD4-4E56-BB4A-0F40E836C5F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7607916B-5FD4-4E56-BB4A-0F40E836C5F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7607916B-5FD4-4E56-BB4A-0F40E836C5F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0BAA7CE5-646B-4C64-8772-95095E47D118}
+	EndGlobalSection
+EndGlobal
