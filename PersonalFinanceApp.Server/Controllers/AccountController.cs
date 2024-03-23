@@ -31,5 +31,19 @@ namespace PersonalFinanceApp.Server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(AccountLoginDTO model)
+        {
+            try
+            {
+                var token = await _userService.LoginAsync(model.Username, model.Password);
+                return Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
