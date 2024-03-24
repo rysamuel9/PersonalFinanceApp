@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using PersonalFinanceApp.Server.DTO;
@@ -25,6 +28,36 @@ namespace PersonalFinanceApp.Server.Controllers
             {
                 var user = await _userService.RegisterAsync(model.Username, model.Email, model.PasswordHash, model.FirstName);
                 return Ok(new { user.Email, user.Username });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(AccountLoginDTO model)
+        {
+            try
+            {
+                var token = await _userService.LoginAsync(model.Username, model.Password);
+                return Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("logout"), Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await HttpContext.SignOutAsync();
+                Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
+                return Ok(new { message = "Logout successful." });
             }
             catch (Exception ex)
             {

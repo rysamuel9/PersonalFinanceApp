@@ -6,5 +6,6 @@ namespace PersonalFinanceApp.Server.Repositories.IRepository
     {
         Task<User> GetUserByUsernameAsync(string username);
         Task<User> CreateUserAsync(User user);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }
