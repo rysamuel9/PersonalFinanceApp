@@ -1,0 +1,94 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "_AuthLayout";
+}
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .show-password {
+        cursor: pointer;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h3>Login</h3>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm", @class = "needs-validation", novalidate = "true" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Username, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", required = "required" })
+                        <div class="invalid-feedback">Please enter your username.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = "required", id = "passwordInput" })
+                            <button type="button" class="btn btn-outline-secondary show-password" onclick="togglePasswordVisibility()">
+                                <i id="passwordVisibilityIcon" class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
+                        <div class="invalid-feedback">Please enter your password.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="loginButton">
+                        <span id="loginButtonText">Login</span>
+                        <div class="spinner-border spinner-border-sm text-light d-none" role="status" id="loginSpinner">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tambahkan Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("passwordInput");
+        var passwordVisibilityIcon = document.getElementById("passwordVisibilityIcon");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordVisibilityIcon.classList.remove("fa-eye-slash");
+            passwordVisibilityIcon.classList.add("fa-eye");
+        } else {
+            passwordInput.type = "password";
+            passwordVisibilityIcon.classList.remove("fa-eye");
+            passwordVisibilityIcon.classList.add("fa-eye-slash");
+        }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function () {
+        var loginButton = document.getElementById("loginButton");
+        var loginButtonText = document.getElementById("loginButtonText");
+        var loginSpinner = document.getElementById("loginSpinner");
+
+        loginButton.disabled = true;
+        loginButtonText.textContent = "Logging in...";
+        loginSpinner.classList.remove("d-none");
+    });
+</script>
