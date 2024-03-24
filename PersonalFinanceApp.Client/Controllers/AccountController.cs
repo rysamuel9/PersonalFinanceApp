@@ -23,8 +23,14 @@ namespace PersonalFinanceApp.Client.Controllers
 
         public ActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
+
 
         [HttpPost]
         public async Task<ActionResult> Login(LoginViewModel model)

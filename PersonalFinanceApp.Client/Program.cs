@@ -27,7 +27,7 @@ namespace PersonalFinanceApp.Client
                ValidateAudience = false,
                ValidateLifetime = true,
                ValidateIssuerSigningKey = true,
-               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("inisamueltamba-secret-key-terbaik")) // Ganti dengan kunci rahasia Anda
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("inisamueltamba-secret-key-terbaik"))
            };
        });
 
@@ -59,6 +59,17 @@ namespace PersonalFinanceApp.Client
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Account}/{action=Login}/{id?}");
+
+            app.Use(async (context, next) =>
+            {
+                if (context.User.Identity.IsAuthenticated && context.Request.Path == "/")
+                {
+                    context.Response.Redirect("/Home/Index");
+                    return;
+                }
+
+                await next();
+            });
 
             app.Run();
         }
