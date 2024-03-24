@@ -7,6 +7,9 @@ using PersonalFinanceApp.Server.Repositories.IRepository;
 using PersonalFinanceApp.Server.Repositories;
 using PersonalFinanceApp.Server.Services;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace PersonalFinanceApp.Server
 {
@@ -42,6 +45,8 @@ namespace PersonalFinanceApp.Server
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 
 
@@ -58,6 +63,8 @@ namespace PersonalFinanceApp.Server
 
             app.UseHttpsRedirection();
 
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

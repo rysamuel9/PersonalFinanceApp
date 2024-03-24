@@ -33,26 +33,26 @@ namespace PersonalFinanceApp.Server.Services
                 throw new Exception("User not found.");
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            var result = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
                 throw new Exception("Invalid password.");
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = new byte[32];
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-        new Claim(ClaimTypes.Name, user.Id.ToString())
+            new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes("inisamueltamba-secret-key-terbaik")), SecurityAlgorithms.HmacSha256Signature)
             };
+            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
 
         public async Task<User> RegisterAsync(string username, string email, string password, string firstName)
         {
@@ -70,10 +70,11 @@ namespace PersonalFinanceApp.Server.Services
             }
 
             var passwordHash = _passwordHasher.HashPassword(identityUser, password);
+            var userId = identityUser.Id;
 
             var user = new User
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse(userId),
                 Username = username,
                 Email = email,
                 PasswordHash = passwordHash,

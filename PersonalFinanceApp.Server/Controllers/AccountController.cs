@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using PersonalFinanceApp.Server.DTO;
@@ -39,6 +42,22 @@ namespace PersonalFinanceApp.Server.Controllers
             {
                 var token = await _userService.LoginAsync(model.Username, model.Password);
                 return Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("logout"), Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await HttpContext.SignOutAsync();
+                Response.Cookies.Delete(".AspNetCore.Identity.Application");
+
+                return Ok(new { message = "Logout successful." });
             }
             catch (Exception ex)
             {
