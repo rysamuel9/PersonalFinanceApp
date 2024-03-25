@@ -1,24 +1,76 @@
-﻿namespace PersonalFinanceApp.Mobile
+﻿using System.Text.Json;
+using System.Text;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace PersonalFinanceApp.Mobile
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void OnLoginClicked(object sender, EventArgs e)
         {
-            count++;
+            string username = UsernameEntry.Text;
+            string password = PasswordEntry.Text;
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                await DisplayAlert("Error", "Username and password are required.", "OK");
+                return;
+            }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            SetInputsEnabled(false);
+
+            LoadingIndicator.IsRunning = true;
+            LoadingIndicator.IsVisible = true;
+
+            var loginData = new { Username = username, Password = password };
+            var jsonData = JsonConvert.SerializeObject(loginData);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+            var apiUrl = "https://localhost:7253/api/Account/login";
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    var response = await httpClient.PostAsync(apiUrl, content);
+                    response.EnsureSuccessStatusCode();
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    //var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
+                    //await DisplayAlert("Success", $"Login successful!\nToken: {tokenResponse.Token}", "OK");
+                    var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
+                    await Navigation.PushAsync(new HomePage(tokenResponse.Token));
+                }
+                catch (HttpRequestException)
+                {
+                    await DisplayAlert("Error", "Failed to login. Please try again later.", "OK");
+                }
+                finally
+                {
+                    SetInputsEnabled(true);
+
+                    LoadingIndicator.IsRunning = false;
+                    LoadingIndicator.IsVisible = false;
+                }
+            }
+        }
+
+        private class TokenResponse
+        {
+            public string Token { get; set; }
+        }
+
+        private void SetInputsEnabled(bool isEnabled)
+        {
+            UsernameEntry.IsEnabled = isEnabled;
+            PasswordEntry.IsEnabled = isEnabled;
         }
     }
 
