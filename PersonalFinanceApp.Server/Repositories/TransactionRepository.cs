@@ -24,15 +24,21 @@ namespace PersonalFinanceApp.Server.Repositories
                 query = query.Where(t => t.Date.Month == month);
             }
 
-            var totalIncome = await query.Where(t => t.Type == "income").SumAsync(t => t.Amount);
-            var totalExpense = await query.Where(t => t.Type == "expense").SumAsync(t => t.Amount);
+            var incomeTransactions = await query.Where(t => t.Type == "income").ToListAsync();
+            var expenseTransactions = await query.Where(t => t.Type == "expense").ToListAsync();
+
+            var totalIncome = incomeTransactions.Sum(t => t.Amount);
+            var totalExpense = expenseTransactions.Sum(t => t.Amount);
 
             return new TotalIncomeExpenseDTO
             {
                 TotalIncome = totalIncome,
-                TotalExpense = totalExpense
+                TotalExpense = totalExpense,
+                IncomeTransactions = incomeTransactions,
+                ExpenseTransactions = expenseTransactions
             };
         }
+
 
         public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync(Guid userId, int pageNumber, int pageSize)
         {
